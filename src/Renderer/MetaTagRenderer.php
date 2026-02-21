@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symkit\MetadataBundle\Renderer;
 
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symkit\MetadataBundle\Contract\PageContextProviderInterface;
 use Symkit\MetadataBundle\Contract\SiteInfoProviderInterface;
 
@@ -12,7 +13,10 @@ final readonly class MetaTagRenderer
     public function __construct(
         private PageContextProviderInterface $contextProvider,
         private SiteInfoProviderInterface $siteInfoProvider,
+        private RequestStack $requestStack,
         private string $titleFormat = '{title} | {siteName}',
+        private ?string $twitterSite = null,
+        private ?string $twitterCreator = null,
     ) {
     }
 
@@ -30,8 +34,18 @@ final readonly class MetaTagRenderer
         $tags[] = \sprintf('<title>%s</title>', $this->escape($formattedTitle));
         $tags[] = \sprintf('<meta name="description" content="%s">', $this->escape($context->description));
 
-        if ('' !== $context->canonicalUrl) {
-            $tags[] = \sprintf('<link rel="canonical" href="%s">', $this->escape($context->canonicalUrl));
+        if (null !== $context->robots) {
+            $tags[] = \sprintf('<meta name="robots" content="%s">', $this->escape($context->robots));
+        }
+
+        if (null !== $context->author) {
+            $tags[] = \sprintf('<meta name="author" content="%s">', $this->escape($context->author));
+        }
+
+        $canonicalUrl = $this->resolveCanonicalUrl($context->canonicalUrl);
+
+        if ('' !== $canonicalUrl) {
+            $tags[] = \sprintf('<link rel="canonical" href="%s">', $this->escape($canonicalUrl));
         }
 
         $tags[] = \sprintf('<meta property="og:site_name" content="%s">', $this->escape($this->siteInfoProvider->getWebsiteName()));
@@ -39,8 +53,8 @@ final readonly class MetaTagRenderer
         $tags[] = \sprintf('<meta property="og:title" content="%s">', $this->escape($context->title));
         $tags[] = \sprintf('<meta property="og:description" content="%s">', $this->escape($context->description));
 
-        if ('' !== $context->canonicalUrl) {
-            $tags[] = \sprintf('<meta property="og:url" content="%s">', $this->escape($context->canonicalUrl));
+        if ('' !== $canonicalUrl) {
+            $tags[] = \sprintf('<meta property="og:url" content="%s">', $this->escape($canonicalUrl));
         }
 
         $ogImage = $context->ogImage ?? $this->siteInfoProvider->getDefaultOgImage();
@@ -51,6 +65,14 @@ final readonly class MetaTagRenderer
         $tags[] = \sprintf('<meta name="twitter:card" content="%s">', $context->twitterCard->value);
         $tags[] = \sprintf('<meta name="twitter:title" content="%s">', $this->escape($context->title));
         $tags[] = \sprintf('<meta name="twitter:description" content="%s">', $this->escape($context->description));
+
+        if (null !== $this->twitterSite) {
+            $tags[] = \sprintf('<meta name="twitter:site" content="%s">', $this->escape($this->twitterSite));
+        }
+
+        if (null !== $this->twitterCreator) {
+            $tags[] = \sprintf('<meta name="twitter:creator" content="%s">', $this->escape($this->twitterCreator));
+        }
 
         if (null !== $ogImage) {
             $tags[] = \sprintf('<meta name="twitter:image" content="%s">', $this->escape($ogImage));
@@ -85,6 +107,20 @@ final readonly class MetaTagRenderer
         }
 
         return implode("\n    ", $tags);
+    }
+
+    private function resolveCanonicalUrl(string $contextCanonicalUrl): string
+    {
+        if ('' !== $contextCanonicalUrl) {
+            return $contextCanonicalUrl;
+        }
+
+        $request = $this->requestStack->getMainRequest();
+        if (null === $request) {
+            return '';
+        }
+
+        return $request->getUri();
     }
 
     private function escape(string $value): string

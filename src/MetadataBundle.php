@@ -54,6 +54,12 @@ class MetadataBundle extends AbstractBundle
                         ->scalarNode('title_format')
                             ->defaultValue('{title} | {siteName}')
                         ->end()
+                        ->scalarNode('twitter_site')
+                            ->defaultNull()
+                        ->end()
+                        ->scalarNode('twitter_creator')
+                            ->defaultNull()
+                        ->end()
                     ->end()
                 ->end()
                 ->arrayNode('json_ld')
@@ -70,7 +76,7 @@ class MetadataBundle extends AbstractBundle
     /**
      * @param array{
      *     site_info_provider: string,
-     *     meta_tags: array{enabled: bool, title_format: string},
+     *     meta_tags: array{enabled: bool, title_format: string, twitter_site: ?string, twitter_creator: ?string},
      *     json_ld: array{enabled: bool},
      *     breadcrumbs: array{enabled: bool},
      * } $config
@@ -93,7 +99,9 @@ class MetadataBundle extends AbstractBundle
 
         if ($config['meta_tags']['enabled']) {
             $services->set(MetaTagRenderer::class)
-                ->arg('$titleFormat', $config['meta_tags']['title_format']);
+                ->arg('$titleFormat', $config['meta_tags']['title_format'])
+                ->arg('$twitterSite', $config['meta_tags']['twitter_site'])
+                ->arg('$twitterCreator', $config['meta_tags']['twitter_creator']);
 
             $services->set(SeoListener::class);
 
@@ -114,8 +122,11 @@ class MetadataBundle extends AbstractBundle
                 ->tag('symkit_metadata.schema_generator');
             $services->set(WebPageSchemaGenerator::class)
                 ->tag('symkit_metadata.schema_generator');
-            $services->set(BreadcrumbSchemaGenerator::class)
-                ->tag('symkit_metadata.schema_generator');
+
+            if ($config['breadcrumbs']['enabled']) {
+                $services->set(BreadcrumbSchemaGenerator::class)
+                    ->tag('symkit_metadata.schema_generator');
+            }
 
             $services->set(JsonLdTwigExtension::class)
                 ->tag('twig.extension');

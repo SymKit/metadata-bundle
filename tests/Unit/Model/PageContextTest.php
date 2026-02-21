@@ -21,6 +21,8 @@ final class PageContextTest extends TestCase
         self::assertSame(OgType::WEBSITE, $context->ogType);
         self::assertSame(TwitterCard::SUMMARY_LARGE_IMAGE, $context->twitterCard);
         self::assertSame('', $context->canonicalUrl);
+        self::assertNull($context->robots);
+        self::assertNull($context->author);
         self::assertSame([], $context->properties);
     }
 
@@ -33,6 +35,8 @@ final class PageContextTest extends TestCase
             ogType: OgType::ARTICLE,
             twitterCard: TwitterCard::SUMMARY,
             canonicalUrl: 'https://example.com/page',
+            robots: 'noindex, nofollow',
+            author: 'Jane Doe',
             properties: ['author' => 'John'],
         );
 
@@ -42,6 +46,8 @@ final class PageContextTest extends TestCase
         self::assertSame(OgType::ARTICLE, $context->ogType);
         self::assertSame(TwitterCard::SUMMARY, $context->twitterCard);
         self::assertSame('https://example.com/page', $context->canonicalUrl);
+        self::assertSame('noindex, nofollow', $context->robots);
+        self::assertSame('Jane Doe', $context->author);
         self::assertSame(['author' => 'John'], $context->properties);
     }
 }

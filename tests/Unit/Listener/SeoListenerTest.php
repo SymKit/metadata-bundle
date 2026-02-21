@@ -125,6 +125,60 @@ final class SeoListenerTest extends TestCase
         self::assertSame('Invokable', $builder->getContext()->title);
     }
 
+    public function testSeoWithRobots(): void
+    {
+        $builder = new PageContextBuilder();
+        $listener = new SeoListener($builder);
+
+        $controller = new class {
+            #[Seo(title: 'Private', robots: 'noindex, nofollow')]
+            public function action(): void
+            {
+            }
+        };
+
+        $event = $this->createEvent([$controller, 'action']);
+        $listener->onKernelController($event);
+
+        self::assertSame('noindex, nofollow', $builder->getContext()->robots);
+    }
+
+    public function testSeoWithAuthor(): void
+    {
+        $builder = new PageContextBuilder();
+        $listener = new SeoListener($builder);
+
+        $controller = new class {
+            #[Seo(title: 'Article', author: 'Jane Doe')]
+            public function action(): void
+            {
+            }
+        };
+
+        $event = $this->createEvent([$controller, 'action']);
+        $listener->onKernelController($event);
+
+        self::assertSame('Jane Doe', $builder->getContext()->author);
+    }
+
+    public function testSeoWithCanonicalUrl(): void
+    {
+        $builder = new PageContextBuilder();
+        $listener = new SeoListener($builder);
+
+        $controller = new class {
+            #[Seo(title: 'Canonical', canonicalUrl: 'https://example.com/canonical')]
+            public function action(): void
+            {
+            }
+        };
+
+        $event = $this->createEvent([$controller, 'action']);
+        $listener->onKernelController($event);
+
+        self::assertSame('https://example.com/canonical', $builder->getContext()->canonicalUrl);
+    }
+
     /**
      * @param callable|array{object, string} $controller
      */

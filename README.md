@@ -11,6 +11,9 @@ A modern, SOLID, and extensible Symfony bundle for managing SEO metadata, OpenGr
 - **8 Built-in Schema DTOs**: FAQ, Article, Product, LocalBusiness, Event, HowTo, Video, Review.
 - **Separate Attributes**: `#[Seo]` and `#[Breadcrumb]` for precise, independent configuration.
 - **Twig Integration**: Simple functions for templates.
+- **Auto Canonical URL**: Automatically uses the current request URL as `<link rel="canonical">` unless overridden.
+- **Robots & Author**: Per-page `robots` and `author` meta tags via builder or `#[Seo]` attribute.
+- **Twitter Cards**: Global `twitter:site` and `twitter:creator` via bundle configuration.
 - **Worker-safe**: `ResetInterface` ensures clean state between requests (Swoole, FrankenPHP, RoadRunner).
 
 ## Installation
@@ -39,6 +42,8 @@ symkit_metadata:
     meta_tags:
         enabled: true
         title_format: '{title} | {siteName}'
+        # twitter_site: '@yoursite'
+        # twitter_creator: '@yourcreator'
     json_ld:
         enabled: true
     breadcrumbs:
@@ -76,6 +81,8 @@ symkit_metadata:
     meta_tags:
         enabled: true                         # Activates SeoListener, MetaTagRenderer, SeoTwigExtension
         title_format: '{title} | {siteName}'  # Supports {title} and {siteName} placeholders
+        twitter_site: '@yoursite'             # Global twitter:site meta tag (optional)
+        twitter_creator: '@yourcreator'       # Global twitter:creator meta tag (optional)
 
     json_ld:
         enabled: true                         # Activates JsonLdCollector, JsonLdService, generators, JsonLdTwigExtension
@@ -153,6 +160,9 @@ use Symkit\MetadataBundle\Enum\OgType;
     description: 'Read our latest blog post.',
     ogImage: 'https://example.com/image.jpg',
     ogType: OgType::ARTICLE,
+    robots: 'index, follow',
+    author: 'Jane Doe',
+    canonicalUrl: 'https://example.com/blog/post',
 )]
 #[Breadcrumb(
     context: 'website',
@@ -178,7 +188,9 @@ public function action(): Response
     $this->builder
         ->setTitle('Dynamic Title')
         ->setDescription('Dynamic description')
-        ->setOgImage('/path/to/image.jpg');
+        ->setOgImage('/path/to/image.jpg')
+        ->setRobots('noindex, nofollow')
+        ->setAuthor('Jane Doe');
     // ...
 }
 ```

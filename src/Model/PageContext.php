@@ -19,6 +19,8 @@ final readonly class PageContext
         public OgType $ogType = OgType::WEBSITE,
         public TwitterCard $twitterCard = TwitterCard::SUMMARY_LARGE_IMAGE,
         public string $canonicalUrl = '',
+        public ?string $robots = null,
+        public ?string $author = null,
         public array $properties = [],
     ) {
     }

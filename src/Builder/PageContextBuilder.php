@@ -19,6 +19,8 @@ final class PageContextBuilder implements PageContextBuilderInterface, PageConte
     private OgType $ogType = OgType::WEBSITE;
     private TwitterCard $twitterCard = TwitterCard::SUMMARY_LARGE_IMAGE;
     private string $canonicalUrl = '';
+    private ?string $robots = null;
+    private ?string $author = null;
     /** @var array<string, mixed> */
     private array $properties = [];
     private ?PageContext $context = null;
@@ -71,6 +73,22 @@ final class PageContextBuilder implements PageContextBuilderInterface, PageConte
         return $this;
     }
 
+    public function setRobots(?string $robots): self
+    {
+        $this->robots = $robots;
+        $this->context = null;
+
+        return $this;
+    }
+
+    public function setAuthor(?string $author): self
+    {
+        $this->author = $author;
+        $this->context = null;
+
+        return $this;
+    }
+
     public function setProperties(array $properties): self
     {
         $this->properties = $properties;
@@ -96,6 +114,8 @@ final class PageContextBuilder implements PageContextBuilderInterface, PageConte
             ogType: $this->ogType,
             twitterCard: $this->twitterCard,
             canonicalUrl: $this->canonicalUrl,
+            robots: $this->robots,
+            author: $this->author,
             properties: $this->properties,
         );
     }
@@ -113,6 +133,8 @@ final class PageContextBuilder implements PageContextBuilderInterface, PageConte
         $this->ogType = OgType::WEBSITE;
         $this->twitterCard = TwitterCard::SUMMARY_LARGE_IMAGE;
         $this->canonicalUrl = '';
+        $this->robots = null;
+        $this->author = null;
         $this->properties = [];
         $this->context = null;
     }

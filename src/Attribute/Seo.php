@@ -20,6 +20,9 @@ final readonly class Seo
         public ?string $ogImage = null,
         public OgType $ogType = OgType::WEBSITE,
         public TwitterCard $twitterCard = TwitterCard::SUMMARY_LARGE_IMAGE,
+        public ?string $canonicalUrl = null,
+        public ?string $robots = null,
+        public ?string $author = null,
         public array $properties = [],
     ) {
     }

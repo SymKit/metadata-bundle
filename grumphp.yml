@@ -7,3 +7,11 @@ grumphp:
             config: .php-cs-fixer.dist.php
         phpunit:
             config: phpunit.xml.dist
+        deptrac:
+            config: deptrac.yaml
+        infection:
+            min_msi: 70
+            min_covered_msi: 75
+            only_covered: true
+            threads: max
+            test_framework_options: '--testsuite=Unit'

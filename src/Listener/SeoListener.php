@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Symkit\MetadataBundle\Listener;
 
-use ReflectionMethod;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -14,6 +13,9 @@ use Symkit\MetadataBundle\Contract\PageContextBuilderInterface;
 #[AsEventListener(event: KernelEvents::CONTROLLER, method: 'onKernelController')]
 final readonly class SeoListener
 {
+    /** @use ResolveControllerAttributeTrait<Seo> */
+    use ResolveControllerAttributeTrait;
+
     public function __construct(
         private PageContextBuilderInterface $builder,
     ) {
@@ -25,7 +27,7 @@ final readonly class SeoListener
             return;
         }
 
-        $attribute = $this->resolveAttribute($event);
+        $attribute = $this->resolveAttribute($event, Seo::class);
         if (null === $attribute) {
             return;
         }
@@ -45,35 +47,20 @@ final readonly class SeoListener
         $this->builder->setOgType($attribute->ogType);
         $this->builder->setTwitterCard($attribute->twitterCard);
 
+        if (null !== $attribute->robots) {
+            $this->builder->setRobots($attribute->robots);
+        }
+
+        if (null !== $attribute->author) {
+            $this->builder->setAuthor($attribute->author);
+        }
+
+        if (null !== $attribute->canonicalUrl) {
+            $this->builder->setCanonicalUrl($attribute->canonicalUrl);
+        }
+
         if ([] !== $attribute->properties) {
             $this->builder->addProperties($attribute->properties);
         }
-    }
-
-    private function resolveAttribute(ControllerEvent $event): ?Seo
-    {
-        $controller = $event->getController();
-
-        if (\is_array($controller) && \is_object($controller[0]) && \is_string($controller[1])) {
-            $reflection = new ReflectionMethod($controller[0], $controller[1]);
-        } elseif (\is_object($controller) && method_exists($controller, '__invoke')) {
-            $reflection = new ReflectionMethod($controller, '__invoke');
-        } else {
-            return null;
-        }
-
-        $attributes = $reflection->getAttributes(Seo::class);
-
-        if ([] !== $attributes) {
-            return $attributes[0]->newInstance();
-        }
-
-        $classAttributes = $reflection->getDeclaringClass()->getAttributes(Seo::class);
-
-        if ([] !== $classAttributes) {
-            return $classAttributes[0]->newInstance();
-        }
-
-        return null;
     }
 }

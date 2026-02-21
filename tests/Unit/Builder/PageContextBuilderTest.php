@@ -21,6 +21,8 @@ final class PageContextBuilderTest extends TestCase
         self::assertNull($context->ogImage);
         self::assertSame(OgType::WEBSITE, $context->ogType);
         self::assertSame(TwitterCard::SUMMARY_LARGE_IMAGE, $context->twitterCard);
+        self::assertNull($context->robots);
+        self::assertNull($context->author);
     }
 
     public function testBuildWithSetters(): void
@@ -33,6 +35,8 @@ final class PageContextBuilderTest extends TestCase
             ->setOgType(OgType::ARTICLE)
             ->setTwitterCard(TwitterCard::SUMMARY)
             ->setCanonicalUrl('https://example.com')
+            ->setRobots('noindex')
+            ->setAuthor('Jane Doe')
             ->setProperties(['key' => 'value']);
 
         $context = $builder->build();
@@ -43,6 +47,8 @@ final class PageContextBuilderTest extends TestCase
         self::assertSame(OgType::ARTICLE, $context->ogType);
         self::assertSame(TwitterCard::SUMMARY, $context->twitterCard);
         self::assertSame('https://example.com', $context->canonicalUrl);
+        self::assertSame('noindex', $context->robots);
+        self::assertSame('Jane Doe', $context->author);
         self::assertSame(['key' => 'value'], $context->properties);
     }
 
@@ -92,6 +98,8 @@ final class PageContextBuilderTest extends TestCase
             ->setDescription('Description')
             ->setOgImage('/img.jpg')
             ->setOgType(OgType::ARTICLE)
+            ->setRobots('noindex')
+            ->setAuthor('Author')
             ->setProperties(['key' => 'value']);
 
         $builder->reset();
@@ -102,6 +110,8 @@ final class PageContextBuilderTest extends TestCase
         self::assertSame('', $context->description);
         self::assertNull($context->ogImage);
         self::assertSame(OgType::WEBSITE, $context->ogType);
+        self::assertNull($context->robots);
+        self::assertNull($context->author);
         self::assertSame([], $context->properties);
     }
 }

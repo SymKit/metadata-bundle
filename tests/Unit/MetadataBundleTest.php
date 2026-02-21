@@ -33,6 +33,8 @@ final class MetadataBundleTest extends TestCase
         self::assertSame('Symkit\MetadataBundle\Contract\SiteInfoProviderInterface', $config['site_info_provider']);
         self::assertTrue($config['meta_tags']['enabled']);
         self::assertSame('{title} | {siteName}', $config['meta_tags']['title_format']);
+        self::assertNull($config['meta_tags']['twitter_site']);
+        self::assertNull($config['meta_tags']['twitter_creator']);
         self::assertTrue($config['json_ld']['enabled']);
         self::assertTrue($config['breadcrumbs']['enabled']);
     }
@@ -99,6 +101,19 @@ final class MetadataBundleTest extends TestCase
         self::assertSame('App\\Provider\\MySiteInfoProvider', $config['site_info_provider']);
     }
 
+    public function testTwitterConfiguration(): void
+    {
+        $config = $this->processConfig([
+            'meta_tags' => [
+                'twitter_site' => '@mysite',
+                'twitter_creator' => '@author',
+            ],
+        ]);
+
+        self::assertSame('@mysite', $config['meta_tags']['twitter_site']);
+        self::assertSame('@author', $config['meta_tags']['twitter_creator']);
+    }
+
     /**
      * @param array<string, mixed> $config
      *
@@ -106,7 +121,6 @@ final class MetadataBundleTest extends TestCase
      */
     private function processConfig(array $config): array
     {
-        $bundle = new MetadataBundle();
         $treeBuilder = new TreeBuilder('symkit_metadata');
 
         $rootNode = $treeBuilder->getRootNode();
@@ -121,6 +135,12 @@ final class MetadataBundleTest extends TestCase
                     ->children()
                         ->scalarNode('title_format')
                             ->defaultValue('{title} | {siteName}')
+                        ->end()
+                        ->scalarNode('twitter_site')
+                            ->defaultNull()
+                        ->end()
+                        ->scalarNode('twitter_creator')
+                            ->defaultNull()
                         ->end()
                     ->end()
                 ->end()

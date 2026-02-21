@@ -3,7 +3,6 @@
     "description": "A standalone Symfony bundle for managing page metadata, breadcrumbs, and JSON-LD structured data.",
     "type": "symfony-bundle",
     "license": "MIT",
-    "version": "0.0.1",
     "authors": [
         {
             "name": "SymKit",
@@ -26,19 +25,22 @@
         "symfony/config": "^7.0 || ^8.0",
         "symfony/dependency-injection": "^7.0 || ^8.0",
         "symfony/event-dispatcher": "^7.0 || ^8.0",
+        "symfony/http-foundation": "^7.0 || ^8.0",
         "symfony/http-kernel": "^7.0 || ^8.0",
         "symfony/routing": "^7.0 || ^8.0",
         "twig/twig": "^3.0 || ^4.0"
     },
     "require-dev": {
+        "deptrac/deptrac": "^2.0",
         "friendsofphp/php-cs-fixer": "^3.0",
         "infection/infection": "^0.29",
+        "nyholm/symfony-bundle-test": "^3.0",
         "phpro/grumphp": "^2.0",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^11.0",
-        "deptrac/deptrac": "^2.0",
-        "symkit/bundle-ai-kit": "^0.0.3",
-        "symfony/framework-bundle": "^7.0 || ^8.0"
+        "symfony/framework-bundle": "^7.0 || ^8.0",
+        "symfony/twig-bundle": "^7.0 || ^8.0",
+        "symkit/bundle-ai-kit": "^0.0.3"
     },
     "config": {
         "allow-plugins": {
