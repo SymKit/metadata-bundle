@@ -64,8 +64,6 @@ jobs:
                       symfony: '7.2.*'
                     - php: '8.4'
                       symfony: '7.2.*'
-                    - php: '8.3'
-                      symfony: '8.0.*'
                     - php: '8.4'
                       symfony: '8.0.*'
         steps:
@@ -76,7 +74,7 @@ jobs:
                   coverage: xdebug
             - name: Install Symfony ${{ matrix.symfony }}
               run: |
-                  composer require --no-update symfony/config:${{ matrix.symfony }} symfony/dependency-injection:${{ matrix.symfony }} symfony/event-dispatcher:${{ matrix.symfony }} symfony/http-kernel:${{ matrix.symfony }} symfony/routing:${{ matrix.symfony }}
+                  composer require --no-update symfony/config:${{ matrix.symfony }} symfony/dependency-injection:${{ matrix.symfony }} symfony/event-dispatcher:${{ matrix.symfony }} symfony/http-kernel:${{ matrix.symfony }} symfony/routing:${{ matrix.symfony }} symfony/framework-bundle:${{ matrix.symfony }}
                   composer update --no-progress --prefer-dist
             - run: make test
 
