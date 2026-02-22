@@ -1,4 +1,3 @@
-/.cursor/
 /vendor/
 /composer.lock
 /.phpstan-cache/
