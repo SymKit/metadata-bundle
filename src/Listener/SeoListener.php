@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Symkit\MetadataBundle\Listener;
 
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symkit\MetadataBundle\Attribute\Seo;
 use Symkit\MetadataBundle\Contract\PageContextBuilderInterface;
 
-#[AsEventListener(event: KernelEvents::CONTROLLER, method: 'onKernelController')]
 final readonly class SeoListener
 {
     /** @use ResolveControllerAttributeTrait<Seo> */

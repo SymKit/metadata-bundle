@@ -1,5 +1,6 @@
+{% trans_default_domain 'SymkitMetadataBundle' %}
 {% if breadcrumbs|length > 1 %}
-<nav aria-label="Breadcrumb" class="group flex items-center">
+<nav aria-label="{{ 'breadcrumb.aria_label'|trans }}" class="group flex items-center">
     <ol role="list" class="flex items-center gap-2">
         {% for item in breadcrumbs %}
         <li class="flex items-center gap-2">

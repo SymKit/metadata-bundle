@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Symkit\MetadataBundle\Listener;
 
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symkit\MetadataBundle\Attribute\Breadcrumb;
 use Symkit\MetadataBundle\Contract\BreadcrumbServiceInterface;
 
-#[AsEventListener(event: KernelEvents::CONTROLLER, method: 'onKernelController')]
 final readonly class BreadcrumbListener
 {
     /** @use ResolveControllerAttributeTrait<Breadcrumb> */

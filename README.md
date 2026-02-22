@@ -396,7 +396,6 @@ If upgrading from `sedie/metadata-bundle`:
 
 ```bash
 make install         # Install dependencies
-make install-hooks   # Install git hooks (strips Co-authored-by)
 make cs-fix          # Fix code style
 make phpstan         # Static analysis (level 9)
 make test            # Run tests

@@ -1,17 +1,17 @@
 grumphp:
     tasks:
+        make:
+            task: deptrac
+            triggered_by: [php]
         phpstan:
-            config: phpstan.neon.dist
+            configuration: phpstan.neon.dist
             memory_limit: 512M
+            use_grumphp_paths: false
         phpcsfixer:
             config: .php-cs-fixer.dist.php
         phpunit:
-            config: phpunit.xml.dist
-        deptrac:
-            config: deptrac.yaml
-        infection:
-            min_msi: 70
-            min_covered_msi: 75
-            only_covered: true
-            threads: max
-            test_framework_options: '--testsuite=Unit'
+            config_file: phpunit.xml.dist
+        shell:
+            scripts:
+                - ['-c', 'make infection']
+            triggered_by: [php]

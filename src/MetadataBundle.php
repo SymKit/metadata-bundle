@@ -12,6 +12,7 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_it
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_locator;
 
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symkit\MetadataBundle\Breadcrumb\Service\BreadcrumbService;
 use Symkit\MetadataBundle\Builder\PageContextBuilder;
 use Symkit\MetadataBundle\Contract\BreadcrumbBuilderInterface;
@@ -103,7 +104,8 @@ class MetadataBundle extends AbstractBundle
                 ->arg('$twitterSite', $config['meta_tags']['twitter_site'])
                 ->arg('$twitterCreator', $config['meta_tags']['twitter_creator']);
 
-            $services->set(SeoListener::class);
+            $services->set(SeoListener::class)
+                ->tag('kernel.event_listener', ['event' => KernelEvents::CONTROLLER, 'method' => 'onKernelController']);
 
             $services->set(SeoTwigExtension::class)
                 ->tag('twig.extension');
@@ -143,7 +145,8 @@ class MetadataBundle extends AbstractBundle
                 ->arg('$builders', tagged_locator('symkit_metadata.breadcrumb_builder', 'index'));
             $services->alias(BreadcrumbServiceInterface::class, BreadcrumbService::class);
 
-            $services->set(BreadcrumbListener::class);
+            $services->set(BreadcrumbListener::class)
+                ->tag('kernel.event_listener', ['event' => KernelEvents::CONTROLLER, 'method' => 'onKernelController']);
 
             $services->set(BreadcrumbTwigExtension::class)
                 ->tag('twig.extension');
