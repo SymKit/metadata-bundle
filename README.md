@@ -1,5 +1,9 @@
 # SymKit Metadata Bundle
 
+[![CI](https://github.com/SymKit/metadata-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/SymKit/metadata-bundle/actions)
+[![Latest Version](https://img.shields.io/packagist/v/symkit/metadata-bundle.svg)](https://packagist.org/packages/symkit/metadata-bundle)
+[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-level%209-brightgreen.svg)](https://phpstan.org/)
+
 A modern, SOLID, and extensible Symfony bundle for managing SEO metadata, OpenGraph tags, JSON-LD structured data, and breadcrumbs.
 
 ## Features
